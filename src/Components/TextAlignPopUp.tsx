@@ -17,7 +17,7 @@ export default function TextAlignPopUp() {
         className="toolbar-item icon block-type align-list"
       >
         <i className={`format  ${alignIcon}-align`} />
-        <span className="toolbar-item text">
+        <span className="toolbar-item text dropdown-text ">
           {capitalizeFirstLetter(alignIcon)}
         </span>
       </button>

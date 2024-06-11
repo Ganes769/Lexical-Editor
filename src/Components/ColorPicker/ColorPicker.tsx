@@ -8,6 +8,7 @@ import TextInput from "../TextInput/Textinput";
 let skipAddingToHistoryStack = false;
 
 interface ColorPickerProps {
+  className?: string;
   color: string;
   onChange?: (value: string, skipHistoryStack: boolean) => void;
 }
@@ -34,6 +35,7 @@ const WIDTH = 214;
 const HEIGHT = 150;
 
 export default function ColorPicker({
+  className,
   color,
   onChange,
 }: Readonly<ColorPickerProps>): JSX.Element {
@@ -102,7 +104,7 @@ export default function ColorPicker({
 
   return (
     <div
-      className="color-picker-wrapper"
+      className={`${className} color-picker-wrapper `}
       style={{ width: WIDTH }}
       ref={innerDivRef}
     >

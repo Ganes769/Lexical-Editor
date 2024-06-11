@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from "react";
-import PopupMenu from "../Components/PopupMenu";
+import PopupMenu from "../components/PopupMenu";
 import { ElementFormatType, FORMAT_ELEMENT_COMMAND } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useHeadingContext } from "../context/HeadingContext";
-import ClickAwayListener from "../Components/ClickAwayListners";
-import { capitalizeFirstLetter } from "../Components/TextAlignPopUp";
+import ClickAwayListener from "../components/ClickAwayListners";
+import { capitalizeFirstLetter } from "../components/TextAlignPopUp";
 interface FormatType {
   [key: string]: ElementFormatType;
 }

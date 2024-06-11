@@ -32,6 +32,7 @@ export const HeadingProvider = ({ children }: HeadingProviderProps) => {
       value={{
         heading,
         setHeading,
+
         headingIcon,
         setHeadingIcon,
         alignIcon,

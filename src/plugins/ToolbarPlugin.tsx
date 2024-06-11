@@ -1,7 +1,6 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-
 import { mergeRegister } from "@lexical/utils";
-
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { $getSelectionStyleValueForProperty } from "@lexical/selection";
 import {
   $getSelection,
@@ -11,25 +10,33 @@ import {
   CLEAR_EDITOR_COMMAND,
   FORMAT_TEXT_COMMAND,
   REDO_COMMAND,
+  RangeSelection,
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from "lexical";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, useCallback, useEffect, useRef, useState } from "react";
 
-import TextAlignPopUp from "../Components/TextAlignPopUp";
-import HeadingPopUp from "../Components/HeadingPopUp";
-import BgColorPicker from "../Components/BgColorPicker";
-import TextColorPicker from "../Components/TextColorPickerOpen";
-import FontSize from "../Components/FontPlugin/FontSize";
-import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
+import TextAlignPopUp from "../components/TextAlignPopUp";
+import HeadingPopUp from "../components/HeadingPopUp";
+import BgColorPicker from "../components/BgColorPicker";
+import TextColorPicker from "../components/TextColorPickerPopUp";
+import FontSize from "../components/FontSize/FontSize";
 
+import FontDropDown from "../components/FontFamily/FontDropDown";
+import { getSelectedNode } from "../utils/getSelectedNode";
+import EmbedLink from "../components/EmbedLink/EmbedLink";
+import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
+import InsertPopup from "../components/InsertPopup";
+import TableActionMenuPlugin from "../components/TableActionMenuPlugin/index";
 const LowPriority = 1;
 
 function Divider() {
   return <div className="divider" />;
 }
 
-export default function ToolbarPlugin() {
+export default function ToolbarPlugin(setIsLinkEditMode: {
+  setIsLinkEditMode: Dispatch<boolean>;
+}): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
   const [canUndo, setCanUndo] = useState(false);
@@ -41,7 +48,9 @@ export default function ToolbarPlugin() {
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
   const [isStrikethrough, setIsStrikethrough] = useState(false);
+  const [fontFamily, setFontFamily] = useState<string>("Arial");
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
+  const [isLink, setIsLink] = useState(false);
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -53,6 +62,16 @@ export default function ToolbarPlugin() {
       setFontSize(
         $getSelectionStyleValueForProperty(selection, "font-size", "15px")
       );
+      setFontFamily(
+        $getSelectionStyleValueForProperty(selection, "font-family", "Arial")
+      );
+      const node = getSelectedNode(selection as RangeSelection);
+      const parent = node.getParent();
+      if ($isLinkNode(parent) || $isLinkNode(node)) {
+        setIsLink(true);
+      } else {
+        setIsLink(false);
+      }
     }
   }, []);
 
@@ -121,6 +140,8 @@ export default function ToolbarPlugin() {
       <Divider />
       <HeadingPopUp />
       <Divider />
+      <FontDropDown editor={editor} style={`font-family`} value={fontFamily} />
+      <Divider />
       <FontSize
         disabled={!isEditable}
         selectionFontSize={fontSize.slice(0, -2)}
@@ -163,10 +184,14 @@ export default function ToolbarPlugin() {
       >
         <i className="format strikethrough" />
       </button>
+      <EmbedLink />
       <BgColorPicker />
       <TextColorPicker />
       <Divider />
       <TextAlignPopUp />
+      <Divider />
+      <InsertPopup />
+      <Divider />
     </div>
   );
 }

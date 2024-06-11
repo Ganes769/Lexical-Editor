@@ -6,21 +6,29 @@ import ClickAwayListener from "./ClickAwayListners";
 export default function BgColorPicker() {
   const [iscolorBgPickerOpen, setisBgColorPickerOpen] = useState(false);
   const { onBgColorSelect } = useColorPicker();
+  const [color, setColor] = useState<string>("#ffffff0");
+  function handleColorChanage(color: string) {
+    onBgColorSelect(color);
+    setColor(color);
+
+    console.log("setcolor", color);
+  }
 
   return (
     <ClickAwayListener onClickAway={() => setisBgColorPickerOpen(false)}>
       <button
         onClick={() => setisBgColorPickerOpen(!iscolorBgPickerOpen)}
-        className="toolbar-item spaced"
+        className={`toolbar-item spaced ${iscolorBgPickerOpen && "active"}`}
         aria-label="Left Align"
       >
         <i className="format bg-color" />
+        <i className="format arrowDown" />
       </button>
 
       {iscolorBgPickerOpen && (
         <ColorPicker
-          color="red"
-          onChange={(color: any) => onBgColorSelect(color)}
+          color={color}
+          onChange={(color: any) => handleColorChanage(color)}
         />
       )}
     </ClickAwayListener>

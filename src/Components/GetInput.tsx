@@ -14,7 +14,7 @@ export default function GetInput({ onChange }: InputProps) {
   const handleEditorChange = (editor: LexicalEditor) => {
     editor.update(() => {
       const htmlString = $generateHtmlFromNodes(editor);
-      console.log(htmlString);
+      // console.log(htmlString);
       setHtmlString(htmlString);
       onChange(htmlString);
     });
